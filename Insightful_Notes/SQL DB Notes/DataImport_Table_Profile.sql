@@ -1,18 +1,5 @@
--- Create the profile table if it doesn't already exist
-CREATE TABLE IF NOT EXISTS profile (
-name varchar(20),
-age integer,
-home_address varchar(100),
-phone char(10),
-home_email varchar(50),
-work_address varchar(100),
-work_position varchar(20),
-work_phone char(10),
-work_id varchar(10),
-school_id varchar(10),
-school_email varchar(50),
-school_address varchar(100)
-);
+-- Insert data into the tables fro DB Schema
+-- Each INSERT statement adds a new row to the table
 
 INSERT INTO profile VALUES (
 'Alex Chung',
@@ -104,4 +91,3 @@ INSERT INTO profile VALUES (
 '30, Vista Square, Middletown, CA 95460'
 );
 
-SELECT * FROM profile;
