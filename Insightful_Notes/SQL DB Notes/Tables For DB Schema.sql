@@ -26,14 +26,14 @@ publisher varchar(100)           --Publisher of the book
 );
 
 create table if not exists chapter (
-id integer,
-number integer,
-title varchar(50),
-content varchar(1024)
+book_isbn varchar(50),           -- ISBN of the book to link the chapter
+number integer,                  -- Number of the chapter
+title varchar(50),               -- Title of Chapter
+content varchar(1024)            -- Content within the chapter
 );
 
 create table if not exists author (
 name varchar(50),
 bio varchar(100),
-email varchar(20)
+email varchar(100)
 );
