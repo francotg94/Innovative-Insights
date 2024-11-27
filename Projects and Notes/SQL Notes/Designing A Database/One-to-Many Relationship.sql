@@ -15,7 +15,7 @@ CREATE TABLE chapter (
   content varchar(1024)
 );
 
-CREATE TABLE page(
+CREATE TABLE page (
   id integer PRIMARY KEY,
   chapter_id integer REFERENCES chapter(id),
   content text,
