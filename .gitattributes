@@ -1,4 +1,4 @@
-*.ipynb linguist-detectable=false
+*.ipynb linguist-language=Python
 *.sql linguist-detectable=true
 *.py linguist-detectable=true
 *.csv linguist-detectable=false
