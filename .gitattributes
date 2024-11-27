@@ -1,0 +1,16 @@
+# Treat Jupyter Notebook files as documentation, not contributing to language stats
+app/*.ipynb linguist-documentation
+
+# Explicitly classify SQL files as SQL
+app/*.sql linguist-language=SQL
+
+# Explicitly classify Python files as Python
+app/*.py linguist-language=Python
+
+# Ignore data files (e.g., CSV, JSON) for language detection
+app/*.csv linguist-detectable=false
+app/*.json linguist-detectable=false
+
+# Treat README files as documentation
+app/README.md linguist-documentation
+
