@@ -68,7 +68,7 @@ def save_to_postgresql(df, db_url, table_name):
         engine = create_engine(db_url)
 
         # Write the DataFrame to the PostgreSQL table
-        df.to_sql(table_name, engine, index=False, if_exists='replace')  # Use 'append' to add to the table
+        df.to_sql(table_name, engine, index=False, if_exists='replace', schema='Scratch_Database')  # Use 'append' to add to the table
         print(f"Data successfully saved to table '{table_name}' in the database.")
     except Exception as e:
         print(f"Failed to save data to database: {e}")
