@@ -1,0 +1,19 @@
+-- Create the new table
+CREATE TABLE IF NOT EXISTS title_match_source (
+    project_id varchar(32),
+    apn text,
+    address text,
+    report_matched boolean,
+    PRIMARY KEY (project_id, apn)
+);
+
+-- Insert data from title_match_log into title_match_source
+INSERT INTO title_match_source (project_id, apn, address, report_matched)
+SELECT 
+    project_id, 
+    title_report_jsonb->>'apn' as apn, 
+    address, 
+    report_matched
+FROM 
+    title_match_log
+ON CONFLICT (project_id, apn) DO NOTHING;
