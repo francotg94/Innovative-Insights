@@ -1,0 +1,19 @@
+[
+    {
+        "description": "QE-143106 \nHIT Pass-Through Test Port Installation",
+        "due_date": "2025-03-06",
+        "priority": "high",
+        "category": "Planned Events",
+        "notes": "Taking over once in execution phase.  I'll be engaging with vendor making sure they're on track",
+        "subtasks": [
+            "As-Found HEPA Certification",
+            "Install Ceiling Test Ports",
+            "Install Duct Test Ports",
+            "As-Left HEPA Certifications",
+            "Post Installation Cleaning",
+            "Post Installation EM Monitoring",
+            "Release For Use"
+        ],
+        "completed": false
+    }
+]
