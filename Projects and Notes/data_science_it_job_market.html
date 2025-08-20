@@ -25,6 +25,11 @@
       <input id="yearMax" type="number" style="width:84px" />
     </label>
 
+    <label class="small">Load CSV:
+      <input id="csvFile" type="file" accept=".csv" />
+    </label>
+    <button id="loadCsvBtn">Load CSV</button>
+
     <button id="applyBtn">Apply</button>
     <button id="resetBtn">Reset</button>
     <button id="downloadCsv">Download CSV</button>
@@ -78,15 +83,25 @@
     // Increase Research Scientist bubble size
     const roleSizeMultiplier = { 'Research Scientist': 4.0 };
 
+    // compute automatic sizeref for Plotly when using sizemode: 'area'
+    function computeSizeRef(data) {
+      const maxOpenings = Math.max(...data.map(d => d.openings));
+      // target max marker area ~ 2000 (tunable) => sizeref = 2.0 * max_area / (max_size^2)
+      // simpler: sizeref = maxOpenings / 40
+      return Math.max(1, Math.round(maxOpenings / 40));
+    }
+
     function buildTraces(filteredData) {
       const grouped = {};
       filteredData.forEach(d => { grouped[d.role] = grouped[d.role] || []; grouped[d.role].push(d); });
+      const all = filteredData.slice();
+      const sizeref = computeSizeRef(all);
 
       return Object.keys(grouped).map(role => {
         const arr = grouped[role].sort((a,b)=>a.year-b.year);
-        const baseSizes = arr.map(d => Math.max(8, Math.min(40, d.openings / 300)));
+        const baseAreas = arr.map(d => Math.max(8, Math.min(2000, d.openings)));
         const multiplier = roleSizeMultiplier[role] || 1;
-        const sizes = baseSizes.map(s => Math.min(120, Math.round(s * multiplier)));
+        const areas = baseAreas.map(a => Math.round(a * multiplier));
 
         return {
           x: arr.map(d => d.year),
@@ -95,7 +110,7 @@
           customdata: arr.map(d => ({openings: d.openings, region: d.region})),
           hovertemplate: '%{text}' + '<' + 'extra' + '>' + '</' + 'extra' + '>',
           mode: 'lines+markers',
-          marker: { size: sizes, sizemode: 'diameter', sizeref: 1 },
+          marker: { size: areas, sizemode: 'area', sizeref: sizeref },
           name: role
         };
       });
@@ -129,6 +144,44 @@
 
     document.getElementById('applyBtn').addEventListener('click', updateChart);
     document.getElementById('resetBtn').addEventListener('click', () => { Array.from(roleSelect.options).forEach(o => o.selected = true); document.getElementById('yearMin').value = Math.min(...years); document.getElementById('yearMax').value = Math.max(...years); Plotly.react(chartDiv, initialTraces, layout, config); });
+
+    // CSV parsing: expects header with role,year,avg_salary,openings,region
+    function parseCsvText(text) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(/,\s*/).map(h => h.replace(/^"|"$/g, '').toLowerCase());
+      const out = [];
+      for (let i=1;i<lines.length;i++) {
+        const cols = lines[i].split(/,\s*/).map(c => c.replace(/^"|"$/g, ''));
+        const row = {};
+        headers.forEach((h,idx) => row[h] = cols[idx]);
+        // coerce types
+        if (!row.role || !row.year) continue;
+        out.push({ role: row.role, year: +row.year, avg_salary: +row.avg_salary || 0, openings: +row.openings || 0, region: row.region || '' });
+      }
+      return out;
+    }
+
+    document.getElementById('loadCsvBtn').addEventListener('click', () => {
+      const f = document.getElementById('csvFile').files[0];
+      if (!f) { alert('Select a CSV file first'); return; }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const parsed = parseCsvText(ev.target.result);
+        if (!parsed.length) { alert('No rows parsed from CSV'); return; }
+        // replace sampleData in-place
+        sampleData.length = 0; parsed.forEach(r => sampleData.push(r));
+        // rebuild controls
+        const newRoles = Array.from(new Set(sampleData.map(d => d.role))).sort();
+        roleSelect.innerHTML = '';
+        newRoles.forEach(r => { const opt = document.createElement('option'); opt.value = r; opt.textContent = r; opt.selected = true; roleSelect.appendChild(opt); });
+        const newYears = Array.from(new Set(sampleData.map(d => d.year))).sort((a,b)=>a-b);
+        document.getElementById('yearMin').value = Math.min(...newYears);
+        document.getElementById('yearMax').value = Math.max(...newYears);
+        Plotly.react(chartDiv, buildTraces(sampleData), layout, config);
+      };
+      reader.readAsText(f);
+    });
 
     document.getElementById('downloadCsv').addEventListener('click', () => {
       const gd = chartDiv; const plotted = gd.data || []; const rows = [['role','year','avg_salary','openings','region']];
