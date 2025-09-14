@@ -22,4 +22,4 @@ Run
 Notes
 - Designed at 900x600 for MacBook displays; scales fine on Retina.
 - Tkinter ships with Python on macOS; no pip installs required.
-
+- Default win score is 11 (adjust in `config.py`).
