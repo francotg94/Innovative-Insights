@@ -10,4 +10,4 @@ All notable changes to this project will be documented in this file.
 - Add `scripts/run_pong.sh` helper (now executable)
 - Add repository `.gitignore` and `requirements.txt`
 
-[0.1.0]: https://github.com/francotg94/portfolio-app/releases/tag/v0.1.0
+[0.1.0]: https://github.com/francotg94/Innovative-Insights/releases/tag/v0.1.0
