@@ -1,0 +1,23 @@
+WINDOW_WIDTH = 900
+WINDOW_HEIGHT = 600
+FPS = 60
+
+# Colors (hex or named)
+BG_COLOR = "#0f172a"       # Slate 900
+FG_COLOR = "#e2e8f0"       # Slate 200
+ACCENT_COLOR = "#22d3ee"   # Cyan 400
+ACCENT2_COLOR = "#f472b6"  # Pink 400
+
+# Gameplay
+PADDLE_WIDTH = 14
+PADDLE_HEIGHT = 120
+PADDLE_MARGIN = 30
+PADDLE_SPEED = 9
+AI_PADDLE_SPEED = 7
+
+BALL_SIZE = 16
+BALL_SPEED = 7
+BALL_SPEED_INC = 0.2
+BALL_MAX_SPEED = 16
+
+WIN_SCORE = 11  # Tweaked: standard Pong match length
